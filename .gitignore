@@ -1,0 +1,8 @@
+# Ignore executable files
+*.exe
+
+# Ignore environment files
+*.env
+
+# Ignore Go vendor directory
+/vendor/

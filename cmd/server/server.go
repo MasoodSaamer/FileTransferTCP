@@ -80,7 +80,7 @@ func handleClient(conn net.Conn) {
 func processPacket(packet *pkg.Packet, conn net.Conn) { //net.Conn is the client connections
 	switch packet.PacketType { // Switch case to handle the different packet types
 	case 0x01: // Data packet
-		fmt.Printf("Processing data packet with sequence numvber %d\n", packet.SequenceNumber)
+		fmt.Printf("Processing data packet with sequence number %d\n", packet.SequenceNumber)
 
 		// Send an ACK(Acknowledgement) for received data packet
 		ackPacket := &pkg.Packet{

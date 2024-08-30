@@ -78,6 +78,16 @@ func handleClient(conn net.Conn) {
 
 // Function to process incoming packets
 func processPacket(packet *pkg.Packet, conn net.Conn) { //net.Conn is the client connections
+	key := []byte("mysecretbyteskey") // 16-byte key for AES-128. Should be same as client.go side's
+
+	// Decrypt the data before processing
+	decryptedData, err := pkg.Decrypt(packet.Payload, key)
+	if err != nil {
+		log.Printf("Error decrypting data: %v", err)
+		return
+	}
+	fmt.Printf("Decrypted Data successfully, length: %d bytes\n", len(decryptedData)) // Log the length
+
 	switch packet.PacketType { // Switch case to handle the different packet types
 	case 0x01: // Data packet
 		fmt.Printf("Processing data packet with sequence number %d\n", packet.SequenceNumber)

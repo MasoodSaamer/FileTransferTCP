@@ -55,6 +55,8 @@ func main() {
 
 // Now to create the sendFile function which splits the file into chunks, creates data packets and sends them to the server
 func sendFile(filePath string, conn net.Conn) error { // if an error occurs, it will return an error or else it will return nil
+	key := []byte("mysecretbyteskey") // Ensure the key is 16 bytes long
+
 	// Open the file
 	file, err := os.Open(filePath) // Opens file in read-only mode
 	if err != nil {
@@ -76,11 +78,17 @@ func sendFile(filePath string, conn net.Conn) error { // if an error occurs, it 
 			break
 		}
 
+		// Encrypt the data before creating a packet
+		encryptedData, err := pkg.Encrypt(buffer[:n], key)
+		if err != nil {
+			return fmt.Errorf("failed to encrypt data: %v", err)
+		}
+
 		// Create a data packet
 		packet := &pkg.Packet{ // Creates a new packet structure to repesent the data packet to be sent to the server
 			PacketType:     0x01, // Data Packet
 			SequenceNumber: sequenceNumber,
-			Payload:        buffer[:n], // Actual data read from the file. aka actual chunk of file daata
+			Payload:        encryptedData, // Actual data read from the file. aka actual chunk of file daata
 		}
 		packet.PayloadLength = uint16(len(packet.Payload)) // Compute the length of the payload
 		packet.CalculateChecksum()

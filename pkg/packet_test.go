@@ -41,3 +41,26 @@ func TestPacketSerialization(t *testing.T) {
 		t.Fatalf("Checksum verification failed")
 	}
 }
+
+func TestEncryptionDecryption(t *testing.T) {
+	key := []byte("mysecretbyteskey")
+	originalData := []byte("Some sensitive data to encrypt")
+
+	// Encrypting the data
+	encryptedData, err := Encrypt(originalData, key)
+	if err != nil {
+		t.Fatalf("Encryption failed: %v", err)
+	}
+
+	// Decrypt the data
+	decryptedData, err := Decrypt(encryptedData, key)
+	if err != nil {
+		t.Fatalf("Decryption failed: %v", err)
+	}
+
+	// ensure decrypted data matches original data
+	if !reflect.DeepEqual(originalData, decryptedData) {
+		t.Fatalf("Decrypted data does not match original")
+	}
+
+}

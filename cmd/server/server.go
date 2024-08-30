@@ -9,6 +9,7 @@ import (
 	"io"
 	"log"
 	"net"
+	// Add "time" if testing a simulated network delay
 )
 
 const ( // define the constants for the server
@@ -111,6 +112,9 @@ func processPacket(packet *pkg.Packet, conn net.Conn) { //net.Conn is the client
 
 // function to send ACK packet back to client
 func sendPacket(packet *pkg.Packet, conn net.Conn) {
+	// Simulate network delay. Comment out if deploying to production
+	//time.Sleep(2 * time.Second)
+
 	//Serialize the packet
 	data, err := packet.ToBytes()
 	if err != nil {
